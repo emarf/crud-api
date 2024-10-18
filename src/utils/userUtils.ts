@@ -1,5 +1,8 @@
 import { IncomingMessage } from "http";
+import { validate as validateUUID } from 'uuid';
 import { User } from "../models/userModal.ts";
+import { StatusCode } from "./constants.ts";
+import { throwError } from "./helpers.ts";
 
 const collectUserData = (req: IncomingMessage): Promise<User> => {
   return new Promise((resolve, reject) => {
@@ -23,8 +26,47 @@ const collectUserData = (req: IncomingMessage): Promise<User> => {
   });
 };
 
+
+const validateUserId = (userId: string): boolean => {
+  if (!validateUUID(userId)) {
+    throwError(StatusCode.BAD_REQUEST, 'Invalid user ID');
+  }
+
+  return true;
+};
+
+
+const validateUserFields = (userData: Partial<User>, isUpdate = false) => {
+  const { username, age, hobbies } = userData;
+
+  if (!isUpdate) {
+    if (!username || !age || !hobbies) {
+      throwError(StatusCode.BAD_REQUEST, 'Missing required fields');
+    }
+  } else {
+    if (!username && !age && !hobbies) {
+      throwError(StatusCode.BAD_REQUEST, 'At least one field must be provided');
+    }
+  }
+
+  if (username && typeof username !== 'string') {
+    throwError(StatusCode.BAD_REQUEST, 'Username field must be a string');
+  }
+
+  if (age && typeof age !== 'number') {
+    throwError(StatusCode.BAD_REQUEST, 'Age field must be a number');
+  }
+
+  if (hobbies && (!Array.isArray(hobbies) || hobbies.some((hobby) => typeof hobby !== 'string'))) {
+    throwError(StatusCode.BAD_REQUEST, 'Hobbies field must be an array of strings');
+  }
+};
+
+
 const userUtils = {
-  collectUserData
+  collectUserData,
+  validateUserId,
+  validateUserFields,
 };
 
 export default userUtils;
