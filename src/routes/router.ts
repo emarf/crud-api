@@ -1,14 +1,13 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 import url from 'node:url';
-import userController from "../controllers/userController.ts";
-import { RequestMethod, StatusCode } from "../utils/constants.ts";
+import userController from "../controllers/userController";
+import { RequestMethod, StatusCode } from "../utils/constants";
 
 const router = (req: IncomingMessage, res: ServerResponse) => {
   const method = req.method;
   const parsedUrl = url.parse(req?.url || '', true);
   let path = parsedUrl.pathname || '';
 
-  // Remove trailing slashes for consistent route matching
   path = path.replace(/\/+$/, '');
   const parts = path.split('/').filter(Boolean);
 

@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import { User } from "../models/userModal.ts";
-import userRepository from "../repositories/userRepository.ts";
-import { StatusCode } from '../utils/constants.ts';
-import { throwError } from '../utils/helpers.ts';
-import userUtils from '../utils/userUtils.ts';
+import { User } from "../models/userModal";
+import userRepository from "../repositories/userRepository";
+import { StatusCode } from '../utils/constants';
+import { throwError } from '../utils/helpers';
+import userUtils from '../utils/userUtils';
 
 const getAllUsers = () => {
   return userRepository.getUsers();

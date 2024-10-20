@@ -1,6 +1,6 @@
 import { ServerResponse } from "http";
-import { StatusCode } from "./constants.ts";
-import { CustomError } from "../models/userModal.ts";
+import { StatusCode } from "./constants";
+import { CustomError } from "../models/userModal";
 
 export const throwError = (statusCode: number, message: string): never => {
   throw { statusCode, message };

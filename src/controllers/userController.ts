@@ -1,18 +1,24 @@
 import { IncomingMessage, ServerResponse } from "node:http";
-import userService from "../services/userService.ts";
-import { StatusCode } from "../utils/constants.ts";
-import { handleError } from "../utils/helpers.ts";
-import userUtils from "../utils/userUtils.ts";
+import userService from "../services/userService";
+import { StatusCode } from "../utils/constants";
+import { handleError } from "../utils/helpers";
+import userUtils from "../utils/userUtils";
 
 const getUsers = (_: IncomingMessage, res: ServerResponse) => {
-  const users = userService.getAllUsers();
-  res.writeHead(StatusCode.OK, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify(users));
+  try {
+    const users = userService.getAllUsers();
+
+    res.writeHead(StatusCode.OK, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(users));
+  } catch (error) {
+    handleError(res, error);
+  }
 };
 
 const getUser = (_: IncomingMessage, res: ServerResponse, userId: string) => {
   try {
     const user = userService.getUserById(userId);
+
     res.writeHead(StatusCode.OK, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(user));
   } catch (error) {
@@ -36,6 +42,7 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, userId: str
   try {
     const userData = await userUtils.collectUserData(req);
     const user = userService.updateUser(userData, userId);
+
     res.writeHead(StatusCode.OK, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(user));
   } catch (error) {
@@ -46,6 +53,7 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, userId: str
 const deleteUser = (_: IncomingMessage, res: ServerResponse, userId: string) => {
   try {
     userService.deleteUser(userId);
+
     res.writeHead(StatusCode.NO_CONTENT);
     res.end();
   } catch (error) {

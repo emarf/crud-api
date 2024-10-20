@@ -1,8 +1,8 @@
 import { IncomingMessage } from "http";
 import { validate as validateUUID } from 'uuid';
-import { User } from "../models/userModal.ts";
-import { StatusCode } from "./constants.ts";
-import { throwError } from "./helpers.ts";
+import { User } from "../models/userModal";
+import { StatusCode } from "./constants";
+import { throwError } from "./helpers";
 
 const collectUserData = (req: IncomingMessage): Promise<User> => {
   return new Promise((resolve, reject) => {

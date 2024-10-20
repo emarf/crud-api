@@ -1,5 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from 'node:http';
-import router from './routes/router.ts';
+import router from './routes/router';
 
 const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
   router(req, res);

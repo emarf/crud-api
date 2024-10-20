@@ -1,4 +1,4 @@
-import { User } from "../models/userModal.ts";
+import { User } from "../models/userModal";
 
 const users: User[] = [];
 
