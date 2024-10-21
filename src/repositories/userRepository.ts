@@ -16,9 +16,20 @@ const create = (user: User) => {
 
 const update = (user: Partial<User>) => {
   const index = users.findIndex((u) => u.id === user.id);
-  if (index !== -1) {
-    users[index] = { ...users[index], ...user };
+
+  if (index === -1) {
+    return null;
   }
+
+  const existingUser = users[index];
+
+  const updatedUser = {
+    ...existingUser,
+    ...user,
+  };
+
+  users[index] = updatedUser;
+  return updatedUser;
 };
 
 const deleteUser = (userId: string) => {

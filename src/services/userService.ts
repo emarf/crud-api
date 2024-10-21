@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from "../models/userModal";
 import userRepository from "../repositories/userRepository";
 import { StatusCode } from '../utils/constants';
-import { throwError } from '../utils/helpers';
+import { filterFalsyUserFields, throwError } from '../utils/helpers';
 import userUtils from '../utils/userUtils';
 
 const getAllUsers = () => {
@@ -35,8 +35,6 @@ const createUser = (userData: User) => {
 const updateUser = (userData: Partial<User>, userId: string) => {
   userUtils.validateUserId(userId);
 
-  const { username, age, hobbies } = userData;
-
   userUtils.validateUserFields(userData, true);
 
   const user = userRepository.getUser(userId);
@@ -45,10 +43,8 @@ const updateUser = (userData: Partial<User>, userId: string) => {
     throwError(StatusCode.NOT_FOUND, 'User not found');
   }
 
-  const updatedUser = { ...user, username, age, hobbies };
-  userRepository.update(updatedUser);
-
-  return updatedUser;
+  const filteredUserData = filterFalsyUserFields(userData);
+  return userRepository.update({...user, ...filteredUserData});
 };
 
 const deleteUser = (userId: string) => {
